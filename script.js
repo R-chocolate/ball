@@ -36,8 +36,8 @@ let ball;
 let polygon;
 
 // 遊戲參數
-const initialSpeed = 3; 
-const speedIncrease = 1.02; 
+const initialSpeed = 1; 
+const speedIncrease = 1.002; 
 const maxSpeed = 40; 
 const gravity = 0.3;  
 const trailLength = 10; // [新增] 尾巴的長度 (存幾個點)
@@ -325,6 +325,7 @@ resetBtn.addEventListener('click', () => {
 
 // 啟動
 init();
+
 
 
 
