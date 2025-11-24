@@ -6,11 +6,19 @@ const scoreBoard = document.getElementById('scoreBoard');
 
 // RWD 設定
 let width, height;
+// --- 變更 1: 宣告變數改成 let ---
+let polygonRadius; 
+
 function resize() {
     width = window.innerWidth;
     height = window.innerHeight;
     canvas.width = width;
     canvas.height = height;
+    
+    // --- 變更 2: 動態計算半徑 ---
+    // 取寬或高的最小值，乘以 0.38 (佔畫面 76%)，預留空間給 UI
+    // 這樣手機版會自動變小，電腦版自動變大
+    polygonRadius = Math.min(width, height) * 0.38;
     
     if (!isRunning) {
         if(polygon && ball) {
@@ -20,10 +28,6 @@ function resize() {
     }
 }
 window.addEventListener('resize', resize);
-width = window.innerWidth;
-height = window.innerHeight;
-canvas.width = width;
-canvas.height = height;
 
 // 狀態變數
 let isRunning = false;
@@ -32,7 +36,6 @@ let ball;
 let polygon;
 
 // 遊戲參數
-const polygonRadius = 220; 
 const initialSpeed = 3; 
 const speedIncrease = 1.02; 
 const maxSpeed = 35; 
@@ -81,7 +84,6 @@ class Polygon {
     updateScore() {
         if(scoreBoard) {
             scoreBoard.innerText = `${this.sides} SIDES`;
-            // 這裡不再去動顏色了，讓 CSS 決定
         }
     }
 
@@ -158,6 +160,7 @@ class Ball {
             }
         }
         
+        // 安全網修正
         const distFromCenter = Math.sqrt(Math.pow(this.x - width/2, 2) + Math.pow(this.y - height/2, 2));
         if (distFromCenter > polygonRadius + 100) {
             this.x = width/2;
@@ -241,12 +244,14 @@ class Ball {
 }
 
 function init() {
+    // --- 變更 3: 確保初始時有正確的半徑 ---
+    resize(); 
+    
     polygon = new Polygon(3);
     ball = new Ball(width/2, height/2 - 50); 
     
     if(scoreBoard) {
         scoreBoard.innerText = "3 SIDES";
-        // 移除設定顏色的程式碼
     }
 }
 
@@ -290,4 +295,4 @@ resetBtn.addEventListener('click', () => {
 
 // 啟動
 init();
-drawStatic();
+// 這裡不需要再呼叫 drawStatic，因為 init 裡面 resize 已經會做了，避免重複
