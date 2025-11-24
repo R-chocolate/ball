@@ -1,3 +1,4 @@
+/* style.css */
 body {
     margin: 0;
     padding: 0;
@@ -18,34 +19,46 @@ canvas {
     z-index: 1;
 }
 
-/* --- 計分板樣式 (已移除發光) --- */
+/* --- 計分板樣式 --- */
 .score-board {
     position: absolute;
-    top: 30px;
+    top: 30px; /* 固定在頂部 */
     left: 50%;
     transform: translateX(-50%);
-    color: #888;
+    
+    color: #888888; 
     font-size: 2rem;
     font-weight: bold;
-    letter-spacing: 5px;
+    
+    /* --- 修正文字換行問題 --- */
+    white-space: nowrap; /* 強制不換行，永遠顯示在一排 */
+    letter-spacing: 2px; /* 間距稍微縮小一點，避免太寬 */
+    text-align: center;
+    
     z-index: 5;
     pointer-events: none;
-    opacity: 0.9; /* 稍微調高一點不透明度，因為沒發光了需要清楚一點 */
+    opacity: 0.8;
 }
 
 /* 懸浮介面層 */
 .ui-layer {
     position: absolute;
-    bottom: 20px;
+    bottom: 30px; /* 稍微拿高一點點 */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
-    gap: 60px;
-    z-index: 10;
-    padding: 20px 50px;
+    justify-content: center; /* 確保內容水平置中 */
+    
+    /* --- 修正按鈕置中問題 --- */
+    gap: 30px; /* 原本 60px 太寬了，手機會塞不下，改小一點 */
+    padding: 15px 30px; /* 內距也縮小一點 */
+    width: max-content; /* 寬度根據內容決定 */
+    max-width: 90vw; /* 限制最大寬度不超過螢幕的 90%，防止跑版 */
+    
     background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 70%);
     border-radius: 50px;
+    z-index: 10;
 }
 
 .control-group {
@@ -54,7 +67,7 @@ canvas {
     align-items: center;
 }
 
-/* --- Cosmic Toggle --- */
+/* --- Cosmic Toggle (保持不變) --- */
 .cosmic-toggle { position: relative; width: 140px; height: 70px; transform-style: preserve-3d; perspective: 500px; }
 .toggle { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, #1a1a2e, #16213e); border-radius: 35px; transition: 0.5s; transform-style: preserve-3d; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.05); overflow: hidden; }
@@ -101,5 +114,4 @@ canvas {
 .button:hover { width: 140px; border-radius: 50px; transition-duration: .3s; background-color: rgb(255, 69, 69); align-items: center; }
 .button:hover .svgIcon { width: 50px; transition-duration: .3s; transform: translateY(60%); }
 .button::before { position: absolute; top: -20px; content: "Reset"; color: white; transition-duration: .3s; font-size: 2px; }
-
 .button:hover::before { font-size: 13px; opacity: 1; transform: translateY(30px); transition-duration: .3s; }
