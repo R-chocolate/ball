@@ -6,7 +6,6 @@ const scoreBoard = document.getElementById('scoreBoard');
 
 // RWD 設定
 let width, height;
-// --- 變更 1: 宣告變數改成 let ---
 let polygonRadius; 
 
 function resize() {
@@ -15,15 +14,16 @@ function resize() {
     canvas.width = width;
     canvas.height = height;
     
-    // --- 變更 2: 動態計算半徑 ---
-    // 取寬或高的最小值，乘以 0.38 (佔畫面 76%)，預留空間給 UI
-    // 這樣手機版會自動變小，電腦版自動變大
-    polygonRadius = Math.min(width, height) * 0.38;
+    // 動態計算半徑
+    polygonRadius = Math.min(width, height) * 0.35;
     
     if (!isRunning) {
         if(polygon && ball) {
             polygon.updatePoints();
-            drawStatic();
+            // 這裡畫一次就好
+            ctx.clearRect(0, 0, width, height);
+            if(polygon) polygon.draw();
+            if(ball) ball.draw();
         }
     }
 }
@@ -40,6 +40,7 @@ const initialSpeed = 3;
 const speedIncrease = 1.02; 
 const maxSpeed = 35; 
 const gravity = 0.3;  
+const trailLength = 20; // [新增] 尾巴的長度 (存幾個點)
 
 // 預設顏色
 const defaultColor = '#666'; 
@@ -120,10 +121,26 @@ class Ball {
         this.color = defaultBallColor;
         this.vx = (Math.random() - 0.5) * 10;
         this.vy = -5; 
+        
+        // [新增] 用來存尾巴軌跡的陣列
+        this.trail = []; 
     }
 
     update() {
         this.vy += gravity;
+
+        // --- 紀錄軌跡 ---
+        // 每次移動前，把當前的位置和顏色存起來
+        this.trail.push({
+            x: this.x, 
+            y: this.y,
+            color: this.color // 紀錄當下的顏色，這樣尾巴會有漸層變色效果
+        });
+        
+        // 如果尾巴太長，就把最舊的刪掉
+        if (this.trail.length > trailLength) {
+            this.trail.shift();
+        }
 
         const subSteps = 20; 
         
@@ -160,7 +177,6 @@ class Ball {
             }
         }
         
-        // 安全網修正
         const distFromCenter = Math.sqrt(Math.pow(this.x - width/2, 2) + Math.pow(this.y - height/2, 2));
         if (distFromCenter > polygonRadius + 100) {
             this.x = width/2;
@@ -230,6 +246,26 @@ class Ball {
     }
 
     draw() {
+        // --- 先畫尾巴 ---
+        for (let i = 0; i < this.trail.length; i++) {
+            const point = this.trail[i];
+            // 計算比例：越新的點越大、越不透明
+            const ratio = (i + 1) / this.trail.length; 
+            
+            ctx.beginPath();
+            // 尾巴的圓圈稍微小一點，製造彗星感
+            ctx.arc(point.x, point.y, this.radius * ratio * 0.8, 0, Math.PI * 2);
+            ctx.fillStyle = point.color;
+            // 設定透明度
+            ctx.globalAlpha = ratio * 0.5; 
+            ctx.fill();
+            ctx.closePath();
+        }
+        // 畫完尾巴記得把透明度設回來，不然多邊形會變透明
+        ctx.globalAlpha = 1.0;
+
+
+        // --- 再畫球本體 ---
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = this.color; 
@@ -244,7 +280,6 @@ class Ball {
 }
 
 function init() {
-    // --- 變更 3: 確保初始時有正確的半徑 ---
     resize(); 
     
     polygon = new Polygon(3);
@@ -258,20 +293,15 @@ function init() {
 function loop() {
     if (!isRunning) return;
 
-    ctx.fillStyle = 'rgba(15, 15, 19, 0.4)'; 
-    ctx.fillRect(0, 0, width, height);
+    // [重要修改] 這裡改成完全清除！
+    // 因為球現在自己會畫尾巴了，所以背景不需要保留殘影，這樣多邊形就會超級乾淨
+    ctx.clearRect(0, 0, width, height);
     
     ball.update();
     polygon.draw();
     ball.draw();
 
     animationId = requestAnimationFrame(loop);
-}
-
-function drawStatic() {
-    ctx.clearRect(0, 0, width, height);
-    if(polygon) polygon.draw();
-    if(ball) ball.draw();
 }
 
 // 事件監聽
@@ -290,9 +320,8 @@ resetBtn.addEventListener('click', () => {
     cancelAnimationFrame(animationId);
     pauseToggle.checked = false; 
     init();
-    drawStatic();
+    // 這裡不需要再呼叫 drawStatic，因為 init 裡面 resize 已經會做了
 });
 
 // 啟動
 init();
-// 這裡不需要再呼叫 drawStatic，因為 init 裡面 resize 已經會做了，避免重複
