@@ -20,13 +20,26 @@ function resize() {
     canvas.width = width;
     canvas.height = height;
     
-    // 縮小圖形
-    polygonRadius = Math.min(width, height) * 0.30;
+    // --- 關鍵修改：區分手機與電腦 ---
     
-    // --- 修改這裡：讓圖形再往上跑一點 ---
-    centerX = width / 2;
-    // 原本是 -40，改成 -80 (甚至 -100 也可以)，讓底部空間變大
-    centerY = (height / 2) - 60; 
+    // 判斷邏輯：如果寬度小於高度，代表是「直屏 (手機)」
+    if (width < height) {
+        // [手機版設定]
+        // 半徑小一點，左右留白
+        polygonRadius = Math.min(width, height) * 0.32;
+        centerX = width / 2;
+        // 中心點大幅上移，讓出底部給按鈕
+        centerY = (height / 2) - 60; 
+    } else {
+        // [電腦版設定]
+        // 半徑可以大一點，因為電腦螢幕寬
+        // 注意：這裡改用 height * 0.35，確保上下不會頂到
+        polygonRadius = height * 0.35; 
+        centerX = width / 2;
+        // 電腦版中心點「不」上移，保持在正中間，或者只微調
+        // 這樣就不會撞到上面的文字了
+        centerY = height / 2; 
+    }
     
     if (!isRunning) {
         if(polygon && ball) {
@@ -48,7 +61,7 @@ let polygon;
 // 遊戲參數
 const initialSpeed = 1;    
 const speedIncrease = 1.01; 
-const maxSpeed = 20;       
+const maxSpeed = 25;       
 const gravity = 0.2;       
 const trailLength = 10; 
 
@@ -120,8 +133,11 @@ class Ball {
     }
 
     reset(x, y) {
-        this.x = x;
-        this.y = y;
+        // 重置時也要確保位置是新的中心點
+        // 為了避免電腦版球在正中間太無聊，稍微往上一點點掉下來
+        this.x = centerX;
+        this.y = centerY - 50; 
+        
         this.radius = 12;
         this.color = defaultBallColor;
         this.vx = (Math.random() - 0.5) * 8; 
