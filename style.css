@@ -21,7 +21,7 @@ canvas {
 /* --- 計分板樣式 (已移除發光) --- */
 .score-board {
     position: absolute;
-    top: 15%;
+    top: 30px;
     left: 50%;
     transform: translateX(-50%);
     color: #888;
@@ -101,4 +101,5 @@ canvas {
 .button:hover { width: 140px; border-radius: 50px; transition-duration: .3s; background-color: rgb(255, 69, 69); align-items: center; }
 .button:hover .svgIcon { width: 50px; transition-duration: .3s; transform: translateY(60%); }
 .button::before { position: absolute; top: -20px; content: "Reset"; color: white; transition-duration: .3s; font-size: 2px; }
+
 .button:hover::before { font-size: 13px; opacity: 1; transform: translateY(30px); transition-duration: .3s; }
