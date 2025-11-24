@@ -40,7 +40,7 @@ const initialSpeed = 3;
 const speedIncrease = 1.02; 
 const maxSpeed = 35; 
 const gravity = 0.3;  
-const trailLength = 20; // [新增] 尾巴的長度 (存幾個點)
+const trailLength = 10; // [新增] 尾巴的長度 (存幾個點)
 
 // 預設顏色
 const defaultColor = '#666'; 
@@ -325,4 +325,5 @@ resetBtn.addEventListener('click', () => {
 
 // 啟動
 init();
+
 
