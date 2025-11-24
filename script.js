@@ -34,11 +34,11 @@ function resize() {
         // [電腦版設定]
         // 半徑可以大一點，因為電腦螢幕寬
         // 注意：這裡改用 height * 0.35，確保上下不會頂到
-        polygonRadius = height * 0.32; 
+        polygonRadius = height * 0.30; 
         centerX = width / 2;
         // 電腦版中心點「不」上移，保持在正中間，或者只微調
         // 這樣就不會撞到上面的文字了
-        centerY = height / 2; 
+        centerY = height / 2-10; 
     }
     
     if (!isRunning) {
@@ -324,4 +324,5 @@ resetBtn.addEventListener('click', () => {
 });
 
 init();
+
 
