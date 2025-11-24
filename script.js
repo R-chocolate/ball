@@ -4,14 +4,15 @@ const pauseToggle = document.getElementById('pauseToggle');
 const resetBtn = document.getElementById('resetBtn');
 const scoreBoard = document.getElementById('scoreBoard');
 
-// FPS 控制變數
+// FPS 控制
 let lastTime = 0;
 const fps = 60; 
 const interval = 1000 / fps;
 
-// RWD 設定
+// RWD 與中心點設定
 let width, height;
 let polygonRadius; 
+let centerX, centerY; 
 
 function resize() {
     width = window.innerWidth;
@@ -19,7 +20,13 @@ function resize() {
     canvas.width = width;
     canvas.height = height;
     
+    // 縮小圖形
     polygonRadius = Math.min(width, height) * 0.30;
+    
+    // --- 修改這裡：讓圖形再往上跑一點 ---
+    centerX = width / 2;
+    // 原本是 -40，改成 -80 (甚至 -100 也可以)，讓底部空間變大
+    centerY = (height / 2) - 60; 
     
     if (!isRunning) {
         if(polygon && ball) {
@@ -39,10 +46,10 @@ let ball;
 let polygon;
 
 // 遊戲參數
-const initialSpeed = 1; 
-const speedIncrease = 1.005; 
-const maxSpeed = 20; 
-const gravity = 0.15;  
+const initialSpeed = 1;    
+const speedIncrease = 1.01; 
+const maxSpeed = 20;       
+const gravity = 0.2;       
 const trailLength = 10; 
 
 const defaultColor = '#666'; 
@@ -65,9 +72,6 @@ class Polygon {
 
     updatePoints() {
         this.points = [];
-        const centerX = width / 2;
-        const centerY = height / 2;
-        
         for (let i = 0; i < this.sides; i++) {
             const angle = this.rotation + (i * 2 * Math.PI / this.sides);
             this.points.push({
@@ -120,8 +124,8 @@ class Ball {
         this.y = y;
         this.radius = 12;
         this.color = defaultBallColor;
-        this.vx = (Math.random() - 0.5) * 10;
-        this.vy = -5; 
+        this.vx = (Math.random() - 0.5) * 8; 
+        this.vy = -4; 
         this.trail = []; 
     }
 
@@ -171,10 +175,10 @@ class Ball {
             }
         }
         
-        const distFromCenter = Math.sqrt(Math.pow(this.x - width/2, 2) + Math.pow(this.y - height/2, 2));
+        const distFromCenter = Math.sqrt(Math.pow(this.x - centerX, 2) + Math.pow(this.y - centerY, 2));
         if (distFromCenter > polygonRadius + 100) {
-            this.x = width/2;
-            this.y = height/2;
+            this.x = centerX;
+            this.y = centerY;
             this.vx = 0;
             this.vy = 0;
         }
@@ -186,8 +190,9 @@ class Ball {
         
         const midX = (p1.x + p2.x) / 2;
         const midY = (p1.y + p2.y) / 2;
-        const toCenterX = (width/2) - midX;
-        const toCenterY = (height/2) - midY;
+        
+        const toCenterX = centerX - midX;
+        const toCenterY = centerY - midY;
         
         let nx = -dy;
         let ny = dx;
@@ -263,18 +268,16 @@ class Ball {
 function init() {
     resize(); 
     polygon = new Polygon(3);
-    ball = new Ball(width/2, height/2 - 50); 
+    ball = new Ball(centerX, centerY - 50); 
     if(scoreBoard) scoreBoard.innerText = "3 SIDES";
 }
 
-// --- FPS 鎖定版的 Loop ---
 function loop(timestamp) {
     if (!isRunning) return;
     animationId = requestAnimationFrame(loop);
 
     const deltaTime = timestamp - lastTime;
     
-    // 只有當時間累積超過 16.6ms 時才畫下一張
     if (deltaTime >= interval) {
         lastTime = timestamp - (deltaTime % interval);
 
@@ -289,7 +292,6 @@ function loop(timestamp) {
 pauseToggle.addEventListener('change', (e) => {
     if (e.target.checked) {
         isRunning = true;
-        // 重置時間
         lastTime = performance.now();
         loop(lastTime);
     } else {
@@ -306,5 +308,3 @@ resetBtn.addEventListener('click', () => {
 });
 
 init();
-
-
