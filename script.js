@@ -19,7 +19,7 @@ function resize() {
     canvas.width = width;
     canvas.height = height;
     
-    polygonRadius = Math.min(width, height) * 0.38;
+    polygonRadius = Math.min(width, height) * 0.30;
     
     if (!isRunning) {
         if(polygon && ball) {
@@ -39,8 +39,8 @@ let ball;
 let polygon;
 
 // 遊戲參數
-const initialSpeed = 2; 
-const speedIncrease = 1.005; 
+const initialSpeed = 1; 
+const speedIncrease = 1.01; 
 const maxSpeed = 35; 
 const gravity = 0.25;  
 const trailLength = 10; 
@@ -306,3 +306,4 @@ resetBtn.addEventListener('click', () => {
 });
 
 init();
+
