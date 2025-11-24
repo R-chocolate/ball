@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution Ball</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="scoreBoard" class="score-board">3 SIDES</div>
+
+    <canvas id="simulationCanvas"></canvas>
+
+    <div class="ui-layer">
+        
+        <div class="control-group">
+            <label class="cosmic-toggle">
+                <input class="toggle" type="checkbox" id="pauseToggle" />
+                <div class="slider">
+                    <div class="cosmos"></div>
+                    <div class="energy-line"></div>
+                    <div class="energy-line"></div>
+                    <div class="energy-line"></div>
+                    <div class="toggle-orb">
+                        <div class="inner-orb"></div>
+                        <div class="ring"></div>
+                    </div>
+                    <div class="particles">
+                        <div style="--angle: 30deg" class="particle"></div>
+                        <div style="--angle: 60deg" class="particle"></div>
+                        <div style="--angle: 90deg" class="particle"></div>
+                        <div style="--angle: 120deg" class="particle"></div>
+                        <div style="--angle: 150deg" class="particle"></div>
+                        <div style="--angle: 180deg" class="particle"></div>
+                    </div>
+                </div>
+            </label>
+        </div>
+
+        <div class="control-group">
+            <button class="button" id="resetBtn">
+                <svg viewBox="0 0 448 512" class="svgIcon">
+                    <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
