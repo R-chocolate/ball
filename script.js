@@ -40,9 +40,9 @@ let polygon;
 
 // 遊戲參數
 const initialSpeed = 1; 
-const speedIncrease = 1.01; 
-const maxSpeed = 35; 
-const gravity = 0.25;  
+const speedIncrease = 1.005; 
+const maxSpeed = 20; 
+const gravity = 0.15;  
 const trailLength = 10; 
 
 const defaultColor = '#666'; 
@@ -306,4 +306,5 @@ resetBtn.addEventListener('click', () => {
 });
 
 init();
+
 
