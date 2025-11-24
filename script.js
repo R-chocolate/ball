@@ -15,7 +15,7 @@ function resize() {
     canvas.height = height;
     
     // 動態計算半徑
-    polygonRadius = Math.min(width, height) * 0.35;
+    polygonRadius = Math.min(width, height) * 0.30;
     
     if (!isRunning) {
         if(polygon && ball) {
@@ -325,3 +325,4 @@ resetBtn.addEventListener('click', () => {
 
 // 啟動
 init();
+
